@@ -25,6 +25,8 @@ install_ruby() {
   if test -f "${download_path}/archive.tar.gz"; then
     tar -C "$install_path" -xzf "${download_path}/archive.tar.gz"
     rm -r "$download_path"
+    echo "installed at: $install_path"
+    ls -alh "$install_path"
     return
   fi
 
