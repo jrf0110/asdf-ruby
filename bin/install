@@ -10,25 +10,23 @@ install_ruby() {
   local version="$2"
   local install_path="$3"
 
+  echo "Download path $ASDF_DOWNLOAD_PATH"
+  ls -alh "$ASDF_DOWNLOAD_PATH/openssl/ssl"
+  if test "$ASDF_DOWNLOAD_PATH"; then
+    install_prebuilt_version "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
+    echo "installed at: $install_path"
+    ls -alh "$install_path"
+    return
+  fi
+
   if [ "$install_type" != "version" ]; then
     echoerr "Cannot install specific ref from source, sorry."
     echoerr "For a list of available versions, see \`asdf list-all ruby\`"
     exit 1
   fi
+  
 
-  local download_path=$(mktemp -dt asdf-golang.XXXX)
-  current_script_path=${BASH_SOURCE[0]}
-  plugin_dir=$(dirname "$(dirname "$current_script_path")")
-  created_tmp="1"
-  ASDF_INSTALL_VERSION="$version" ASDF_DOWNLOAD_PATH="$download_path" "$plugin_dir/bin/download"
-
-  if test -f "${download_path}/archive.tar.gz"; then
-    tar -C "$install_path" -xzf "${download_path}/archive.tar.gz"
-    rm -r "$download_path"
-    echo "installed at: $install_path"
-    ls -alh "$install_path"
-    return
-  fi
+  echo "Building from source..."
 
   ensure_ruby_build_setup
 
@@ -140,4 +138,4 @@ install_default_gems() {
 }
 
 install_ruby "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
-install_default_gems
+# install_default_gems

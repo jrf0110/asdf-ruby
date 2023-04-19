@@ -2,6 +2,7 @@
 
 RUBY_BUILD_VERSION="${ASDF_RUBY_BUILD_VERSION:-v20230330}"
 RUBY_BUILD_TAG="$RUBY_BUILD_VERSION"
+curl_opts=(-fsSL)
 
 echoerr() {
   echo >&2 -e "\033[0;31m$1\033[0m"
@@ -75,4 +76,40 @@ ruby_build_source_dir() {
 
 ruby_build_path() {
   echo "$(ruby_build_dir)/bin/ruby-build"
+}
+
+download_prebuilt_release() {
+	local version filename url
+	version="$1"
+	filename="$2"
+
+  url="https://github.com/ruby/ruby-builder/releases/download/toolcache/ruby-${version}-ubuntu-22.04.tar.gz"
+
+	echo "* Downloading Ruby $version... from $url"
+	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+}
+
+install_prebuilt_version() {
+	local install_type="$1"
+	local version="$2"
+	local install_path="$3"
+
+	if [ "$install_type" != "version" ]; then
+		fail "asdf-$TOOL_NAME supports release installs only"
+	fi
+
+	(
+		mkdir -p "$install_path"
+		cp -r -L "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+
+		# TODO: Assert <YOUR TOOL> executable exists.
+		# local tool_cmd
+		# tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
+		# test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+
+		echo "ruby $version installation was successful!"
+	) || (
+		rm -rf "$install_path"
+		fail "An error occurred while installing ruby $version."
+	)
 }
