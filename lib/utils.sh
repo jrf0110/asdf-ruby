@@ -102,6 +102,8 @@ install_prebuilt_version() {
 		mkdir -p "$install_path"
 		cp -r -L "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
+    $install_path/bin/ruby-build
+
 		# TODO: Assert <YOUR TOOL> executable exists.
 		# local tool_cmd
 		# tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
