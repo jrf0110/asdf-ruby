@@ -17,7 +17,7 @@ install_ruby() {
   fi
 
   local download_path=$(mktemp -dt asdf-golang.XXXX)
-  local $download_tar="${download_path}/archive.tar.gz"
+  $download_tar="${download_path}/archive.tar.gz"
   created_tmp="1"
   ASDF_INSTALL_VERSION="$version" ASDF_DOWNLOAD_PATH="$download_path" "$PLUGIN_DIR/bin/download"
 
