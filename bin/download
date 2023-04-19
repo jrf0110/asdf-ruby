@@ -4,9 +4,6 @@ set -eu
 
 PLUGIN_DIR="$(dirname "${BASH_SOURCE[0]}")/.."
 
-# shellcheck source=/dev/null
-source "$PLUGIN_DIR/lib/helpers.sh"
-
 download_ruby () {
     local version=$1
     local download_path=$2
@@ -17,12 +14,6 @@ download_ruby () {
     # platform=$(get_platform)
     # arch=$(get_arch)
     download_url="https://github.com/ruby/ruby-builder/releases/download/toolcache/ruby-${version}-ubuntu-22.04.tar.gz"
-
-    http_code=$(curl -I -w '%{http_code}' -s -o /dev/null "$download_url")
-    if [ "$http_code" -eq 404 ] || [ "$http_code" -eq 403 ]; then
-        fail "URL: ${download_url} returned status ${http_code}"
-    fi
-
     curl "$download_url" -o "${download_path}/archive.tar.gz"
 }
 
