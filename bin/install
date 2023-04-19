@@ -10,12 +10,10 @@ install_ruby() {
   local version="$2"
   local install_path="$3"
 
-  echo "Download path $ASDF_DOWNLOAD_PATH"
+  echo "Attempting to use pre-built binary"
   ls -alh "$ASDF_DOWNLOAD_PATH/openssl/ssl"
   if test "$ASDF_DOWNLOAD_PATH"; then
     install_prebuilt_version "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
-    echo "installed at: $install_path"
-    ls -alh "$install_path"
     return
   fi
 
