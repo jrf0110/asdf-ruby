@@ -6,8 +6,6 @@ set -euo pipefail
 source "$(dirname "$0")/../lib/utils.sh"
 
 install_ruby() {
-  ensure_ruby_build_setup
-
   local install_type="$1"
   local version="$2"
   local install_path="$3"
@@ -17,6 +15,19 @@ install_ruby() {
     echoerr "For a list of available versions, see \`asdf list-all ruby\`"
     exit 1
   fi
+
+  local download_path=$(mktemp -dt asdf-golang.XXXX)
+  local $download_tar="${download_path}/archive.tar.gz"
+  created_tmp="1"
+  ASDF_INSTALL_VERSION="$version" ASDF_DOWNLOAD_PATH="$download_path" "$PLUGIN_DIR/bin/download"
+
+  if test -f "$download_tar"; then
+    tar -C "$install_path" -xzf "$download_tar"
+    rm -r "$download_path"
+    return
+  fi
+
+  ensure_ruby_build_setup
 
   local opts=""
   local patches=""
